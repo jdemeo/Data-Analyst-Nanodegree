@@ -1,0 +1,4 @@
+Helpful Resources for Completion of Project
+
+* Changing Background Color of ggplot2 plots
+https://stackoverflow.com/questions/6736378/how-do-i-change-the-background-color-of-a-plot-made-with-ggplot2
