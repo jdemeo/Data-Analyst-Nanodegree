@@ -8,26 +8,49 @@ output:
 
 #### Document your Analysis:
   1. A stream-of-consciousness analysis and exploration of the data
-    a. Headings and text should organize your thoughts and reflect your analysis as you explored the data.
-    b. Plots in this analysis do not need to be polished with labels, units, and titles; these plots are exploratory (quick and dirty). They should, however, be of the appropriate type and effectively convey the information you glean from them.
-    c. You can iterate on a plot in the same R chunk, but you don't need to show every plot iteration in your analysis.
+    a. Headings and text should organize your thoughts and reflect your analysis
+    as you explored the data.
+    b. Plots in this analysis do not need to be polished with labels, units, and
+    titles; these plots are exploratory (quick and dirty). They should, however,
+    be of the appropriate type and effectively convey the information you glean 
+    from them.
+    c. You can iterate on a plot in the same R chunk, but you don't need to show
+    every plot iteration in your analysis.
   2. A section at the end called "Final Plots and Summary"
-    a. You will select three plots from your analysis to polish and share in this section. The three plots should show different trends and should be polished with appropriate labels, units, and titles (see the Project Rubric for more information).
+    a. You will select three plots from your analysis to polish and share in 
+    this section. The three plots should show different trends and should be 
+    polished with appropriate labels, units, and titles (see the Project Rubric 
+    for more information).
   3. A final section called 'Reflection'
-    a. This should contain a few sentences about your struggles, successes, and ideas for future exploration on the data set (see the Project Rubric for more information)
+    a. This should contain a few sentences about your struggles, successes, and 
+    ideas for future exploration on the data set (see the Project Rubric for 
+    more information)
 
 # White Wine Dataset
 #### Variables
-  - fixed acidity (tartaric acid - g / L): most acids involved with wine are fixed or nonvolatile (do not evaporate readily)
-  - volatile acidity (acetic acid - g / L): the amount of acetic acid in wine, which at too high of levels can lead to an unpleasant, vinegar taste
-  - citric acid (g / L): found in small quantities, citric acid can add 'freshness' and flavor to wines
-  - residual sugar (g / L): the amount of sugar remaining after fermentation stops, it's rare to find wines with less than 1 gram/liter and wines with greater than 45 grams/liter are considered sweet
+  - fixed acidity (tartaric acid - g / L): most acids involved with wine are 
+  fixed or nonvolatile (do not evaporate readily)
+  - volatile acidity (acetic acid - g / L): the amount of acetic acid in wine, 
+  which at too high of levels can lead to an unpleasant, vinegar taste
+  - citric acid (g / L): found in small quantities, citric acid can add 
+  'freshness' and flavor to wines
+  - residual sugar (g / L): the amount of sugar remaining after fermentation 
+  stops, it's rare to find wines with less than 1 gram/liter and wines with 
+  greater than 45 grams/liter are considered sweet
   - chlorides (sodium chloride - g / L): the amount of salt in the wine
-  - free sulfur dioxide (mg / L): the free form of SO2 exists in equilibrium between molecular SO2 (as a dissolved gas) and bisulfite ion; it prevents microbial growth and the oxidation of wine
-  - total sulfur dioxide (mg / L): amount of free and bound forms of S02; in low concentrations, SO2 is mostly undetectable in wine, but at free SO2 concentrations over 50 ppm, SO2 becomes evident in the nose and taste of wine
-  - density (g / mL): the density of wine is close to that of water depending on the percent alcohol and sugar content
-  - pH: describes how acidic or basic a wine is on a scale from 0 (very acidic) to 14 (very basic); most wines are between 3-4 on the pH scale
-  - sulphates (potassium sulphate - g / L): a wine additive which can contribute to sulfur dioxide gas (S02) levels, wich acts as an antimicrobial and antioxidant
+  - free sulfur dioxide (mg / L): the free form of SO2 exists in equilibrium 
+  between molecular SO2 (as a dissolved gas) and bisulfite ion; it prevents 
+  microbial growth and the oxidation of wine
+  - total sulfur dioxide (mg / L): amount of free and bound forms of S02; in low
+  concentrations, SO2 is mostly undetectable in wine, but at free SO2 
+  concentrations over 50 ppm, SO2 becomes evident in the nose and taste of wine
+  - density (g / mL): the density of wine is close to that of water depending on
+  the percent alcohol and sugar content
+  - pH: describes how acidic or basic a wine is on a scale from 0 (very acidic) 
+  to 14 (very basic); most wines are between 3-4 on the pH scale
+  - sulphates (potassium sulphate - g / L): a wine additive which can contribute
+  to sulfur dioxide gas (S02) levels, wich acts as an antimicrobial and 
+  antioxidant
   - alcohol (% by volume): the percent alcohol content of the wine
   - quality (score between 0 and 10)
 
@@ -39,7 +62,8 @@ output:
 
 #### Important to note:
   - All correlations looked at are for linear models
-  - All volumes have been changed from a cubic length unit to a volume unit by personal preference
+  - All volumes have been changed from a cubic length unit to a volume unit by 
+  personal preference
 
 ### Guiding Question: Which chemical properties influence the quality of white wines?
 
@@ -50,6 +74,7 @@ library(gridExtra)
 library(GGally)
 library(scales)
 library(RColorBrewer)
+library(memisc)
 
 # Load in dataset
 whites <- read.csv('wineQualityWhites.csv')
@@ -69,39 +94,9 @@ str(whites)
 - Converted quality to a categorical variable
 - There exists 4898 observations across 13 variables (12 inputs, 1 output)
 
-#### Look at groupings of the chemical properties of wine to get a feel for range of values, if input features are correlated, and which features might likely effect quality.
+#### Univariate Analysis
 
-#### Acidity
-```{r echo=FALSE, message=FALSE, warning=FALSE}
-# Look at acidity
-
-# Fixed acidity vs volatile acidity
-ggplot(aes(fixed.acidity, volatile.acidity), data=whites) +
-  geom_point(aes(color=quality), alpha = 0.9, position = 'jitter') +
-  scale_color_brewer(type = 'seq',
-                     guide = guide_legend(title = 'Quality', reverse=TRUE, override.aes = list(alpha = 1, size = 2))) +
-  theme(panel.background = element_rect(fill = 'gray'))
-  
-
-# Fixed acidity vs citric acid
-ggplot(aes(fixed.acidity, citric.acid), data=whites) +
-  geom_point(aes(color=quality), alpha = 0.9, position = 'jitter') +
-  scale_color_brewer(type = 'seq',
-                     guide = guide_legend(title = 'Quality', reverse=TRUE, override.aes = list(alpha = 1, size = 2))) +
-  theme(panel.background = element_rect(fill = 'gray'))
-
-# Volatile acidity vs citric acid
-ggplot(aes(volatile.acidity, citric.acid), data=whites) +
-  geom_point(aes(color=quality), alpha = 0.9, position = 'jitter') +
-  scale_color_brewer(type = 'seq',
-                     guide = guide_legend(title = 'Quality', reverse=TRUE, override.aes = list(alpha = 1, size = 2))) +
-  theme(panel.background = element_rect(fill = 'gray'))
-```
-- Large cluster of wine with volatile acidity (0.15-0.60 g/L) and fixed acidity (4.5-9.0 g/L)
-- Citric acid levels seem to be clustered below concentration (< 0.5 g/L)
-- At first glance, lower concentration of acidity corresponds to increasing quality
-
-#### Could high volatile acidity effect quality?
+#### Output feature: Quality
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 # Quality
 ggplot(aes(quality), data=whites) +
@@ -109,73 +104,255 @@ ggplot(aes(quality), data=whites) +
 
 print("Counts for Quality Ratings")
 table(whites$quality)
+```
+- Quality looks to have a normal distribution. There are far fewer examples for 
+quality ratings of 3, 4, 8, and 9.
 
-# Quality vs Volatile Acidity
-ggplot(aes(quality, volatile.acidity), data=whites) +
-  geom_boxplot()
+#### Input features
 
-# Seeing if subsets of data have higher correlations with quality than the entire dataset
+#### Acidities
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# Histograms
+# Fixed Acidity
+ggplot(aes(fixed.acidity), data=whites) +
+  geom_histogram()
 
-# Quality vs Volatile Acidity <= 0.45 g/L
-ggplot(aes(quality, volatile.acidity), data=subset(whites, volatile.acidity <= 0.45)) +
-  geom_boxplot()
+# Volatile Acidity
+ggplot(aes(volatile.acidity), data=whites) +
+  geom_histogram()
 
-# Quality vs Free Sulfur Dioxide > 0.45 g/L
-ggplot(aes(quality, volatile.acidity), data=subset(whites, volatile.acidity > 0.45)) +
-  geom_boxplot()
+# Citric acid concentration
+ggplot(aes(citric.acid), data=whites) +
+  geom_histogram()
 
-# Correlations with quality
-print("Full dataset")
-with(whites, cor.test(as.numeric(quality), volatile.acidity, method='pearson'))
-print("Subset with volatile.acidity <= 0.45")
-with(subset(whites, volatile.acidity <= 0.45), cor.test(as.numeric(quality), volatile.acidity, method='pearson'))
-print("Subset with volatile.acidity > 0.45")
-with(subset(whites, volatile.acidity > 0.45), cor.test(as.numeric(quality), volatile.acidity, method='pearson'))
+# pH
+ggplot(aes(pH), data=whites) +
+  geom_histogram()
+```
+
+- All acidicity related parameters have a normal distribution
+- Large cluster of wine with fixed acidity of (6.0-7.5 g/L) 
+- Large cluster of wine with volatile acidity of (0.15-0.45 g/L)
+- Large cluster of win with citric acid concentration of (0.25 - 0.5 g/L)
+- pH range is pretty narrow with the majority between 3.0 and 3.45 pH units
+  - Note: pH is measured on a logarithmic scale
+
+#### Acidities
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# Histograms
+# Free sulfur dioxide
+ggplot(aes(free.sulfur.dioxide), data=whites) +
+  geom_histogram()
+
+print("Summary Statistics-Free Sulfur Dioxide Concentrations")
+summary(whites$free.sulfur.dioxide)
+
+# Total Sulfur Dioxide
+ggplot(aes(total.sulfur.dioxide), data=whites) +
+  geom_histogram()
+
+print("Summary Statistics-Total Sulfur Dioxide Concentrations")
+summary(whites$total.sulfur.dioxide)
+
+# Sulphates
+ggplot(aes(sulphates), data=whites) +
+  geom_histogram()
+```
+
+- Free sulfur dioxide concentration and total sulfur dioxide is slightly right
+skewed with some outliers that are more than 2 fold greater than the third
+quartile
+- Total sulphate concentration is slightly bimodal (in a narrow range) and is
+skewed right.
+
+#### Sugars, ions, and density
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# Histograms
+# Residual sugar
+ggplot(aes(residual.sugar), data=whites) +
+  geom_histogram()
+
+print("Summary Statistics-Residual Sugar Concentration")
+summary(whites$residual.sugar)
+
+# Chloride concentration
+ggplot(aes(chlorides), data=whites) +
+  geom_histogram()
+
+print("Summary Statistics-Chlorides Concentration")
+summary(whites$chlorides)
+
+# Alcohol concentration
+ggplot(aes(alcohol), data=whites) +
+  geom_histogram()
+
+# Density
+ggplot(aes(density), data=whites) +
+  geom_histogram()
+
+print("Summary Statistics-Density")
+summary(whites$density)
+```
+
+- Residual sugar concentration and chlorides concentration is slightly right
+skewed with some outliers that are more than 2 fold greater than the third
+quartile
+- Alcohol concentration is skewed right with non-normal distribution
+- Density measures are within a very small range with Q1-Q3 (0.9917-0.9961)
+difference being less than 0.005 g/mL difference.
+
+#### Summary
+- Most features are normally distributed.
+- Some features contain outliers that should be fitted out of the viewing window
+where approriate
+
+#### Bivariate/Multivariate analysis, correlations, and what influences quality
+
+#### Acidity
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# Fixed acidity vs volatile acidity
+ggplot(aes(fixed.acidity, volatile.acidity, color=quality), data=whites) +
+  geom_point(alpha = 0.7, position = 'jitter') +
+  geom_smooth(method = "lm", se = FALSE, size = 1) +
+  scale_color_brewer(type = 'seq',
+                     guide = guide_legend(title = 'Quality', reverse=TRUE,
+                                          override.aes = list(alpha = 1,
+                                                              size = 1.3))) +
+  theme(panel.background = element_rect(fill = 'gray'))
+  
+```
+
+- Large cluster of wine with volatile acidity (0.15-0.60 g/L) and fixed acidity 
+(4.5-9.0 g/L)
+- Quality seems to be higher for lower concentration of acidity
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# Fixed acidity vs citric acid
+ggplot(aes(fixed.acidity, citric.acid, color=quality), data=whites) +
+  geom_point(alpha = 0.7, position = 'jitter') +
+  geom_smooth(method = "lm", se = FALSE, size = 1) +
+  scale_color_brewer(type = 'seq',
+                     guide = guide_legend(title = 'Quality', reverse=TRUE, 
+                                          override.aes = list(alpha = 1,
+                                                              size = 1.3))) +
+  theme(panel.background = element_rect(fill = 'gray'))
 
 ```
-- Quality looks to have a normal distribution. There are far fewer examples for quality ratings of 3, 4, 8, and 9.
-- Quality and volatile acidity are negatively correlated likely because at higher concentrations the acidity may be unpleasant to the drinker.
-- Subsetting the data to an arbitrary level of volatile acidity (> 0.45 g/L) that includes more outliers, indicates that a stronger negative correlation exists at these extremes relative to the remainder of the dataset.
+
+- Citric acid levels seem to be clustered below concentration (< 0.5 g/L)
+- Regression for each quality rating seems model about the same
+- Not a very good combination of features to determine quality
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# Volatile acidity vs citric acid
+ggplot(aes(volatile.acidity, citric.acid, color=quality), data=whites) +
+  geom_point(alpha = 0.7, position = 'jitter') +
+  geom_smooth(method = "lm", se = FALSE, size = 1) +
+  scale_color_brewer(type = 'seq',
+                     guide = guide_legend(title = 'Quality', reverse=TRUE,
+                                          override.aes = list(alpha = 1,
+                                                              size = 1.3))) +
+  theme(panel.background = element_rect(fill = 'gray'))
+
+```
+
+- Regression for each quality rating seems model about the same
+- Not a very good combination of features to determine quality
+
+#### Could high volatile acidity effect quality?
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# Quality vs Volatile Acidity
+ggplot(aes(quality, volatile.acidity), data=whites) +
+  geom_jitter(alpha = 0.3) +
+  geom_boxplot(alpha = 0.5, color = 'blue')
+
+print("Full dataset")
+with(whites, 
+     cor.test(as.numeric(quality), volatile.acidity, method='pearson'))
+
+# Seeing if subsets of data have higher 
+# correlations with quality than the entire dataset
+
+# Quality vs Volatile Acidity <= 0.45 g/L
+ggplot(aes(quality, volatile.acidity), 
+       data=subset(whites, volatile.acidity <= 0.45)) +
+  geom_jitter(alpha = 0.3) +
+  geom_boxplot(alpha = 0.5, color = 'blue')
+
+print("Subset with volatile.acidity <= 0.45")
+with(subset(whites, volatile.acidity <= 0.45), 
+     cor.test(as.numeric(quality), volatile.acidity, method='pearson'))
+
+# Quality vs Free Sulfur Dioxide > 0.45 g/L
+ggplot(aes(quality, volatile.acidity), 
+       data=subset(whites, volatile.acidity > 0.45)) +
+  geom_jitter(alpha = 0.3) +
+  geom_boxplot(alpha = 0.5, color = 'blue')
+
+print("Subset with volatile.acidity > 0.45")
+with(subset(whites, volatile.acidity > 0.45), 
+     cor.test(as.numeric(quality), volatile.acidity, method='pearson'))
+
+```
+
+- Quality and volatile acidity are negatively correlated likely because at 
+higher concentrations the acidity may be unpleasant to the drinker.
+- Subsetting the data to an arbitrary level of volatile acidity (> 0.45 g/L) 
+that includes more outliers, indicates that a stronger negative correlation 
+exists at these extremes relative to the remainder of the dataset.
 
 #### Does pH play a factor in quality?
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 ggplot(aes(quality, pH), data=whites) +
-  geom_boxplot()
+  geom_jitter(alpha = 0.3) +
+  geom_boxplot(alpha = 0.5, color = 'blue')
 
 print("pH Values across Quality Ratings")
 by(whites$pH, whites$quality, summary)
   
 with(whites, cor.test(as.numeric(quality), pH, method='pearson'))
 ```
-- 25-75% quantile range does not vary much (within 0.3 units) between quality groups
-- pH has a very weak positive correlation with quality, probably not a useful feature for a linear model
+
+- 25-75% quantile range of pH does not vary much (within 0.3 units) between 
+quality ratings
+- pH has a very weak positive correlation with quality, probably not a useful 
+feature for a linear model
 
 #### Sugar, ions, and density
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
-# Look at ion counts, sugar, and density
-
 # Residual sugar vs density
-ggplot(aes(residual.sugar, density), data=whites) +
-  geom_point()
-
-ggplot(aes(residual.sugar, density), data=subset(whites, residual.sugar < 45)) +
-  geom_point() +
+ggplot(aes(residual.sugar, density), 
+       data=subset(whites, residual.sugar < 45)) +
+  geom_point(alpha = 0.3, size = 1) +
+  geom_smooth(method = "lm", se = FALSE, size = 1)
   ggtitle('Resized residual sugar')
 
 print("Summary of Residual Sugar")
 summary(whites$residual.sugar)
 
+```
+
+- Sugar seems to be positively correlated with density, which makes sense from 
+an intensive properties stand point. Addition of higher density solutes to a 
+solvent of lower density will increases the overall density of the mixture.
+- Only one value above 45 g/L, so none of the wines are determined to be sweet 
+by given definition
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
 # Chloride concentration vs density
 ggplot(aes(chlorides, density), data=whites) +
-  geom_point()
+  geom_point(alpha = 0.3, size = 1) +
+  geom_smooth(method = "lm", se = FALSE, size = 1)
 
 print("Summary of Chlorides")
 summary(whites$chlorides)
+```
 
+- Chloride count doesn't seem to effect density by much likely do its relatively
+low concentration (median: 0.043 g/L vs 5.2 g/L for residual sugar)
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
 # Density
-ggplot(aes(density), data=whites) +
-  geom_histogram()
-
 ggplot(aes(density), data=whites) +
   geom_histogram() +
   xlim(0.985,1.005) +
@@ -186,43 +363,46 @@ summary(whites$density)
 
 # Check if density is a valuable feature
 with(whites, cor.test(as.numeric(quality), density, method='pearson'))
-
 ```
-- Sugar seems to be positively correlated with density, which makes sense from an intensive properties stand point, in which addition of higher density solutes to a solvent of lower density will increases the overall density of the mixture.
-- Only one value above 45 g/L, so none of the wines are determined to be sweet by given definition
-- Chloride count doesn't seem to effect density by much likely do its relatively low concentration (median: 0.043 g/L vs 5.2 g/L for residual sugar)
-- Density values seem to be all about the same (25-75% quantile: 0.9917-0.9961) which initially made me conclude that it might not be a useful feature because perceiving the difference in density would be unlikely by a human.
-- Although when checking density vs quality in a t-test, it showed a significant negative correlation
+
+- Looking back at density from the univariate analysis,density values seem to be
+all about the same (25-75% quantile: 0.9917-0.9961), which initially made me 
+conclude that it might not be a useful feature because perceiving the difference
+in density would be unlikely by a human.
+- Although when checking density vs quality in a t-test, it showed a significant
+negative correlation
 
 #### Taking a look at quality vs density
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 # Quality vs density
 ggplot(aes(quality, density), data=whites) +
-  geom_boxplot()
-
-ggplot(aes(quality, density), data=whites) +
-  geom_boxplot() +
+  geom_jitter(alpha = 0.3) +
+  geom_boxplot(alpha = 0.5, color = 'blue') +
   ylim(0.985, 1.005) +
   ggtitle("Resized density")
-
-with(whites, cor.test(as.numeric(quality), density, method='pearson'))
-
 ```
+
 - Box plot shows a roughly negative correlation between quality and density
-- Considering that density is determined by make up of the wine (solutes (ions, sugars, acids, etc), solvents (water, alcohol)) and that solvents are the largest contributor to a mixtures density, may want to look at alcohol and its relation to quality.
+- Considering that density is determined by make up of the wine (solutes (ions, 
+sugars, acids, etc), solvents (water, alcohol)) and that solvents are the 
+largest contributor to a mixtures density, may want to look at alcohol and its 
+relation to quality.
 
 #### Does alcohol content contribute to the quality of wine?
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 # Checking density vs alcohol correlation
 ggplot(aes(density, alcohol), data=whites) +
   geom_point() +
-  xlim(0.985, 1.005)
+  geom_smooth(method = "lm", se = FALSE, size = 1) +
+  xlim(0.985, 1.005) +
+  ggtitle("Resized density")
 
 with(whites, cor.test(density, alcohol))
 
 # Quality vs alcohol
 ggplot(aes(quality, alcohol), data=whites) +
-  geom_boxplot()
+  geom_jitter(alpha = 0.3) +
+  geom_boxplot(alpha = 0.5, color = 'blue')
 
 with(whites, cor.test(as.numeric(quality), alcohol))
 
@@ -233,69 +413,107 @@ with(whites, cor.test(as.numeric(quality), alcohol))
 # with(subset(whites, alcohol > 9.1), cor.test(as.numeric(quality), alcohol))
 
 ```
-- Since as alcohol content increases wine density decreases (r = -0.78), the correlation of density with quality is probably more of a factor of alcohol concentration than density.
-- This is apparent from the higher R-squared value for alcohol/quality than density/quality
+
+- Since as alcohol content increases wine density decreases (r = -0.78), the 
+correlation of density with quality is probably more of a factor of alcohol 
+concentration than density.
+- This is apparent from the higher R-squared value for alcohol/quality than 
+density/quality
 
 #### Checking sulfurous contents
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
 # Sulfur dioxide content
 ggplot(aes(total.sulfur.dioxide, free.sulfur.dioxide), data=whites) +
-  geom_point()
+  geom_smooth(method = "lm", se = FALSE, size = 1) +
+  geom_point() +
+  xlim(0,300)
 
 # Sulfur Dioxide vs Sulphates
 ggplot(aes(total.sulfur.dioxide, sulphates), data=whites) +
+  geom_smooth(method = "lm", se = FALSE, size = 1) +
   geom_point()
+
+with(whites, 
+     cor.test(total.sulfur.dioxide, free.sulfur.dioxide, method='pearson'))
 
 # Look at sulfur dioxide content along with sulphates
 ggplot(aes(total.sulfur.dioxide, free.sulfur.dioxide), data=whites) +
-  geom_point(aes(color=sulphates), alpha=0.4)
+  geom_smooth(method = "lm", se = FALSE, size = 1) +
+  geom_point(aes(color=sulphates), alpha=0.4) +
+  xlim(0,300)
 
-with(whites, cor.test(total.sulfur.dioxide, free.sulfur.dioxide, method='pearson'))
-with(whites, cor.test(total.sulfur.dioxide, sulphates, method='pearson'))
-with(whites, cor.test(sulphates, free.sulfur.dioxide, method='pearson'))
+with(whites, 
+     cor.test(total.sulfur.dioxide, sulphates, method='pearson'))
+with(whites, 
+     cor.test(sulphates, free.sulfur.dioxide, method='pearson'))
+
 ```
-- Note that sulfur dioxide concentrations are in mg/L vs sulphates which is in g/L
-- Total sulfur dioxide has a moderate positive correlation with free sulfur dioxide concentrations, while both variables have weak positive correlations with sulphate concentration
-- Note that a significant amount of wines have free sulfur dioxide concentrations greater than 50 ppm (0.05 g/L or 50 mg/L) which can be unpleasant; may want to subset that data since sulfur dioxide will then be detectable by smell by given definition
+
+- Note that sulfur dioxide concentrations are in mg/L vs sulphates which is in 
+g/L
+- Total sulfur dioxide has a moderate positive correlation with free sulfur 
+dioxide concentrations, while both variables have weak positive correlations 
+with sulphate concentration
+- Note that a significant amount of wines have free sulfur dioxide 
+concentrations greater than 50 ppm (0.05 g/L or 50 mg/L) which can be 
+unpleasant; may want to subset that data since sulfur dioxide will then be 
+detectable by smell by given definition
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 
 # Quality vs Free Sulfur Dioxide
 ggplot(aes(quality, free.sulfur.dioxide), data=whites) +
-  geom_boxplot()
+  geom_jitter(alpha = 0.3) +
+  geom_boxplot(alpha = 0.5, color = 'blue')
+
+print("Full Dataset")
+with(whites, 
+     cor.test(as.numeric(quality), free.sulfur.dioxide, method='pearson')) # No correlation exists
 
 # Quality vs Free Sulfur Dioxide <= 50 ppm
-ggplot(aes(quality, free.sulfur.dioxide), data=subset(whites, free.sulfur.dioxide <= 50)) +
-  geom_boxplot()
+ggplot(aes(quality, free.sulfur.dioxide), 
+       data=subset(whites, free.sulfur.dioxide <= 50)) +
+  geom_jitter(alpha = 0.3) +
+  geom_boxplot(alpha = 0.5, color = 'blue')
+
+print("Subset with free.sulfur.dioxide <= 50")
+with(subset(whites, free.sulfur.dioxide <= 50), 
+     cor.test(as.numeric(quality), free.sulfur.dioxide, method='pearson')) # Positive correlation exists
 
 # Quality vs Free Sulfur Dioxide >= 50 ppm
-ggplot(aes(quality, free.sulfur.dioxide), data=subset(whites, free.sulfur.dioxide > 50)) +
-  geom_boxplot()
-print("Full Dataset")
-with(whites, cor.test(as.numeric(quality), free.sulfur.dioxide, method='pearson')) # No correlation exists
-print("Subset with free.sulfur.dioxide <= 50")
-with(subset(whites, free.sulfur.dioxide <= 50), cor.test(as.numeric(quality), free.sulfur.dioxide, method='pearson')) # Positive correlation exists
+ggplot(aes(quality, free.sulfur.dioxide), 
+       data=subset(whites, free.sulfur.dioxide > 50)) +
+  geom_jitter(alpha = 0.3) +
+  geom_boxplot(alpha = 0.5, color = 'blue')
+
 print("Subset with free.sulfur.dioxide > 50")
-with(subset(whites, free.sulfur.dioxide > 50), cor.test(as.numeric(quality), free.sulfur.dioxide, method='pearson')) # Negative correlation exists
+with(subset(whites, free.sulfur.dioxide > 50), 
+     cor.test(as.numeric(quality), free.sulfur.dioxide, method='pearson')) # Negative correlation exists
 
 ```
-- There exists no significant correlation of quality with free sulfur dioxide concentration, but when the dataset is subset to detectable free sulfur dioxide by smell (concentration >= 50 ppm) and nondetectable free sulfur dioxide by smell (concentration < 50 ppm) there exists a significant negative and positive correlation respectively.
 
+- There exists no significant correlation of quality with free sulfur dioxide 
+concentration, but when the dataset is subset to detectable free sulfur dioxide 
+by smell (concentration >= 50 ppm) and nondetectable free sulfur dioxide by 
+smell (concentration < 50 ppm) there exists a significant negative and positive 
+correlation respectively.
 
 ### Creating a Linear Model to determine quality
+- Using the strongest linearly correlated features with quality: alcohol
+concentration, volatile acidity, free sulfur dioxide concentration
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 # Standard Dataset
 x1 <- lm(as.numeric(quality) ~ alcohol, data=whites)
 x2 <- update(x1, ~ . + volatile.acidity)
 x3 <- update(x2, ~ . + free.sulfur.dioxide)
-x4 <- update(x3, ~ . + density)
 
 print("Full dataset")
 mtable(x1, x2, x3)
 
 # Not so smelly wines
-m1 <- lm(as.numeric(quality) ~ alcohol, subset(whites, free.sulfur.dioxide <= 50))
+m1 <- lm(as.numeric(quality) ~ alcohol, 
+         subset(whites, free.sulfur.dioxide <= 50))
 m2 <- update(m1, ~ . + volatile.acidity)
 m3 <- update(m2, ~ . + free.sulfur.dioxide)
 
@@ -303,7 +521,8 @@ print("Subset of non-smelly wines")
 mtable(m1, m2, m3)
 
 # Smelly wines
-n1 <- lm(as.numeric(quality) ~ alcohol, subset(whites, free.sulfur.dioxide > 50))
+n1 <- lm(as.numeric(quality) ~ alcohol, 
+         subset(whites, free.sulfur.dioxide > 50))
 n2 <- update(n1, ~ . + volatile.acidity)
 n3 <- update(n2, ~ . + free.sulfur.dioxide)
 
@@ -311,7 +530,10 @@ print("Subset of smelly wines")
 mtable(n1, n2, n3)
 
 ```
-- Subsetting the free sulfur dioxide feature shows a slight improvement in overall R^2 with the combined linear model (alcohol, volatile.acidity, free.sulfur.dioxide) vs not-subsetting the free sulfur dioxide feature
+
+- Subsetting the free sulfur dioxide feature shows a slight improvement in 
+overall R^2 with the combined linear model (alcohol, volatile.acidity, 
+free.sulfur.dioxide) vs not-subsetting the free sulfur dioxide feature
 
 
 # Final Plots and Summary
@@ -320,7 +542,8 @@ mtable(n1, n2, n3)
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 # Quality vs Volatile Acidity
 ggplot(aes(quality, volatile.acidity), data=whites) +
-  geom_boxplot() +
+  geom_jitter(alpha = 0.3) +
+  geom_boxplot(alpha = 0.5, color = 'blue') +
   ggtitle("Distribution of Volatile Acid Concentration by Quality") +
   xlab("Quality Ratings") +
   ylab("Volatile Acidity (g/L)")
@@ -328,57 +551,99 @@ ggplot(aes(quality, volatile.acidity), data=whites) +
 with(whites, cor.test(as.numeric(quality), volatile.acidity, method='pearson'))
 
 ```
-- Quality looks to increase with decreasing volatile acid concentration. There seems to be a number of outliers in the distribution of quality ratings 5 and 6, which is reflective of the higher count amounts for those categories.
+- Quality looks to increase with decreasing volatile acid concentration. 
+There seems to be a number of outliers in the distribution of quality ratings 5 
+and 6, which is reflective of the higher count amounts for those categories.
 
 ### Plot Two
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 # Quality vs alcohol
 ggplot(aes(quality, alcohol), data=whites) +
-  geom_boxplot() +
+  geom_jitter(alpha = 0.3) +
+  geom_boxplot(alpha = 0.5, color = 'blue') +
   ggtitle("Distribution of Alcohol Concentration by Quality") +
   xlab("Quality Ratings") +
   ylab("Alcohol Concentration (% by Volume)")
 
 with(whites, cor.test(as.numeric(quality), alcohol))
 ```
-- Quality tends to increase with increasing alcohol concentration. Although the median alcohol concentration increases from quality rating of 5 to 4 and 3.
+- Quality tends to increase with increasing alcohol concentration. Although the 
+median alcohol concentration increases from quality rating of 5 to 4 and 3.
 
 ### Plot Three
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
 # Quality vs Free Sulfur Dioxide
 ggplot(aes(quality, free.sulfur.dioxide), data=whites) +
-  geom_boxplot() +
+  geom_jitter(alpha = 0.3) +
+  geom_boxplot(alpha = 0.5, color = 'blue') +
   ggtitle("Distribution of Free Sulfur Dioxide Concentration by Quality") +
   xlab("Quality Ratings") +
   ylab("Free Sulfur Dioxide Concentration (mg/L or ppm)")
 
+print("Full Dataset")
+with(whites, 
+     cor.test(as.numeric(quality), free.sulfur.dioxide, method='pearson')) # No correlation exists
+
 # Quality vs Free Sulfur Dioxide <= 50 ppm
-ggplot(aes(quality, free.sulfur.dioxide), data=subset(whites, free.sulfur.dioxide <= 50)) +
-  geom_boxplot() +
-  ggtitle("Distribution of Free Sulfur Dioxide Concentration (<= 50 ppm) by Quality") +
+ggplot(aes(quality, free.sulfur.dioxide), 
+       data=subset(whites, free.sulfur.dioxide <= 50)) +
+  geom_jitter(alpha = 0.3) +
+  geom_boxplot(alpha = 0.5, color = 'blue') +
+  ggtitle("Distribution of Free Sulfur Dioxide Concentration (<= 50 ppm) by 
+          Quality") +
   xlab("Quality Ratings") +
   ylab("Free Sulfur Dioxide Concentration (mg/L or ppm)")
+
+print("Subset with free.sulfur.dioxide <= 50")
+with(subset(whites, free.sulfur.dioxide <= 50), 
+     cor.test(as.numeric(quality), free.sulfur.dioxide, method='pearson')) # Positive correlation exists
 
 # Quality vs Free Sulfur Dioxide >= 50 ppm
-ggplot(aes(quality, free.sulfur.dioxide), data=subset(whites, free.sulfur.dioxide > 50)) +
-  geom_boxplot() +
-  ggtitle("Distribution of Free Sulfur Dioxide Concentration (> 50 ppm) by Quality") +
+ggplot(aes(quality, free.sulfur.dioxide), 
+       data=subset(whites, free.sulfur.dioxide > 50)) +
+  geom_jitter(alpha = 0.3) +
+  geom_boxplot(alpha = 0.5, color = 'blue') +
+  ggtitle("Distribution of Free Sulfur Dioxide Concentration (> 50 ppm) by 
+          Quality") +
   xlab("Quality Ratings") +
   ylab("Free Sulfur Dioxide Concentration (mg/L or ppm)")
 
-print("Full Dataset")
-with(whites, cor.test(as.numeric(quality), free.sulfur.dioxide, method='pearson')) # No correlation exists
-print("Subset with free.sulfur.dioxide <= 50")
-with(subset(whites, free.sulfur.dioxide <= 50), cor.test(as.numeric(quality), free.sulfur.dioxide, method='pearson')) # Positive correlation exists
 print("Subset with free.sulfur.dioxide > 50")
-with(subset(whites, free.sulfur.dioxide > 50), cor.test(as.numeric(quality), free.sulfur.dioxide, method='pearson')) # Negative correlation exists
+with(subset(whites, free.sulfur.dioxide > 50), 
+     cor.test(as.numeric(quality), free.sulfur.dioxide, method='pearson')) # Negative correlation exists
 ```
-- Distribution of free sulfur dioxide concentrations for wine samples seems to show very little difference across quality ratings by looking at median value.
-- Subsetting for free sulfur dioxide concentrations above and below 50 ppm shows an inflection point. Quality ratings increase with increasing free sulfur dioxide concentrations in the subset with concentrations less than 51 ppm, whilc quality ratings decreased with increasing free sulfur dioxide concentrations in the subset with concentrations above 50 ppm.
+- Distribution of free sulfur dioxide concentrations for wine samples seems to 
+show very little difference across quality ratings by looking at median value.
+- Subsetting for free sulfur dioxide concentrations above and below 50 ppm shows
+an inflection point. Quality ratings increase with increasing free sulfur 
+dioxide concentrations in the subset with concentrations less than 51 ppm, 
+while quality ratings decreased with increasing free sulfur dioxide 
+concentrations in the subset with concentrations above 50 ppm.
 
 # Reflection
-- I began my analysis by looking at features individually or as a cluster to see if they convey similar information (ie. acidity). I then proceeded to look more deeply at features I thought were more easily perceptible to a drinker to see if they correlated with quality.
-- Looking at particular definitions of the features, volatile acidity and free sulfur dioxide stood out as being important to the sense of smell. Since smell contributes significantly to our perception of taste (or quality in this case), I dived deeper to see if they correlated significantly with quality of the wine. This inference ended up being true in regards to free sulfur dioxide concentration and volatile acid concentrations.
-- Looking more deeply at the density feature, which I initially thought wasn't going to be useful as a feature because of the very narrow range of values, pointed to a significant negative correlation with quality. This led me to the alcohol by volume feature because of it's strong negative correlation with density. Alcohol ended up showing a signifant positive correlation with quality and was the largest factor in determining the percent variance (R^2) for quality.
-- It was difficult to make a linear model to determine quality with the given features. All of the features looked to have a mostly non-linear correlation with quality. It would likely be more useful to use a machine learning algorithm to predict quality from the given features.
-- Also, there was far more examples of wines with a quality ratings of 5, 6, and 7 when an even distribution count for all ratings may have helped to discern more prominent features of wines with qualities of 3, 4, 8, and 9 for a better model for quality predictions. This property of the data also made using a facet wrap to compare distributions ineffective.
+- I began my analysis by looking at features individually or as a cluster to see
+if they convey similar information (ie. acidity). I then proceeded to look more 
+deeply at features I thought were more easily perceptible to a drinker to see if
+they correlated with quality.
+- Looking at particular definitions of the features, volatile acidity and free 
+sulfur dioxide stood out as being important to the sense of smell. Since smell 
+contributes significantly to our perception of taste (or quality in this case), 
+I dived deeper to see if they correlated significantly with quality of the wine.
+This inference ended up being true in regards to free sulfur dioxide 
+concentration and volatile acid concentrations.
+- Looking more deeply at the density feature, which I initially thought wasn't 
+going to be useful as a feature because of the very narrow range of values, 
+pointed to a significant negative correlation with quality. This led me to the 
+alcohol by volume feature because of it's strong negative correlation with 
+density. Alcohol ended up showing a signifant positive correlation with quality 
+and was the largest factor in determining the percent variance (R^2) for 
+quality.
+- It was difficult to make a linear model to determine quality with the given 
+features. All of the features looked to have a mostly non-linear correlation 
+with quality. It would likely be more useful to use a machine learning 
+algorithm to predict quality from the given features.
+- Also, there was far more examples of wines with a quality ratings of 5, 6, and
+7 when an even distribution count for all ratings may have helped to discern 
+more prominent features of wines with qualities of 3, 4, 8, and 9 for a better 
+model for quality predictions. This property of the data also made using a facet
+wrap to compare distributions ineffective.
